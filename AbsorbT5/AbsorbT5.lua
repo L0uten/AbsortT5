@@ -825,7 +825,19 @@ function options()
             if (displayMode == 2 or displayMode == 3) then
                 absF.Text2:SetText(UnitHealth("player"))
             elseif (displayMode == 4) then
-                if (currentAbsorb > 0) then absF.Text:SetTextColor(0, .9, 1, 1) else absF.Text:SetTextColor(1, 1, 1, 1) end
+                if (currentAbsorb > 0) then
+                    if (currentSpec == "Frost") then
+                        absF.Text:SetTextColor(0,.9,1,1)
+                    elseif (currentSpec == "Blood") then
+                        absF.Text:SetTextColor(1,.1,.1,1)
+                    elseif (currentSpec == "DruidProt") then
+                        absF.Text:SetTextColor(1,.4,0,1)
+                    elseif (currentSpec == "PaladinProt") then
+                        absF.Text:SetTextColor(.9,.2,.7,1)
+                    end
+                else 
+                    absF.Text:SetTextColor(1, 1, 1, 1)
+                end
                 absF.Text:SetText(UnitHealth("player") + math.floor(currentAbsorb))
             end
         end
