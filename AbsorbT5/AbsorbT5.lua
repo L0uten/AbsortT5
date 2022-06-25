@@ -1,6 +1,6 @@
 -- Тут нечего смотреть, очередной говно-код (серьезно код говно). Прошу покинуть данный файл -_-
 
-local VERSION = "0.1.2"
+local VERSION = "0.1.3"
 
 local frame = CreateFrame("Frame")
 local optionsF = CreateFrame("Frame", nil, UIParent)
@@ -23,12 +23,14 @@ local trinketAbsorb3 = 0
 local trinketAbsorb4 = 0
 
 local function specCheck()
-    if (IsSpellKnown(55050) or IsSpellKnown(55258) or IsSpellKnown(55259) or IsSpellKnown(55260) or IsSpellKnown(55261) or IsSpellKnown(55262)) then --Heart Strike
+    if (IsSpellKnown(55262)) then
         currentSpec = "Blood"
-    elseif (IsSpellKnown(49143) or IsSpellKnown(51416) or IsSpellKnown(51417) or IsSpellKnown(51418) or IsSpellKnown(51419) or IsSpellKnown(55268)) then --Frost Strike
+    elseif (IsSpellKnown(55268)) then
         currentSpec = "Frost"
     elseif (IsSpellKnown(9634)) then
         currentSpec = "DruidProt"
+    elseif (IsSpellKnown(48827)) then
+        currentSpec = "PaladinProt"
     else
         currentSpec = ""
     end
@@ -90,6 +92,34 @@ local T5_DruidProt = {
     }
 }
 
+local T5_PaladinProt = {
+    { -- Head
+        "30125", -- 277
+        "103418", -- 290
+        "151612" -- 297
+    },
+    { -- Shoulder
+        "30127",
+        "103420",
+        "151614"
+    },
+    { -- Chest
+        "30123",
+        "103416",
+        "151610"
+    },
+    { -- Hands
+        "30124",
+        "103417",
+        "151611"
+    },
+    { -- Legs
+        "30126",
+        "103419",
+        "151613"
+    }
+}
+
 local function howManyT5(spec)
 
     T5 = 0
@@ -125,6 +155,34 @@ local function howManyT5(spec)
     if (spec == "DruidProt") then
         for i = 1, #T5_DruidProt do
             local item = T5_DruidProt[i]
+            for x = 1, #item do
+                if (i == 1) then
+                    local itemId = GetInventoryItemID("player", 1)
+                    if (itemId ~= nil) then if (tostring(item[x]) == tostring(itemId)) then T5 = T5 + 1 end  end
+                end
+                if (i == 2) then
+                    local itemId = GetInventoryItemID("player", 3)
+                    if (itemId ~= nil) then if (tostring(item[x]) == tostring(itemId)) then T5 = T5 + 1 end  end
+                end
+                if (i == 3) then
+                    local itemId = GetInventoryItemID("player", 5)
+                    if (itemId ~= nil) then if (tostring(item[x]) == tostring(itemId)) then T5 = T5 + 1 end  end
+                end
+                if (i == 4) then
+                    local itemId = GetInventoryItemID("player", 10)
+                    if (itemId ~= nil) then if (tostring(item[x]) == tostring(itemId)) then T5 = T5 + 1 end  end
+                end
+                if (i == 5) then
+                    local itemId = GetInventoryItemID("player", 7)
+                    if (itemId ~= nil) then if (tostring(item[x]) == tostring(itemId)) then T5 = T5 + 1 end  end
+                end
+            end
+        end
+    end
+
+    if (spec == "PaladinProt") then
+        for i = 1, #T5_PaladinProt do
+            local item = T5_PaladinProt[i]
             for x = 1, #item do
                 if (i == 1) then
                     local itemId = GetInventoryItemID("player", 1)
@@ -280,6 +338,8 @@ function options()
             absF.Text:SetTextColor(1,.1,.1,1)
         elseif (currentSpec == "DruidProt") then
             absF.Text:SetTextColor(1,.4,0,1)
+        elseif (currentSpec == "PaladinProt") then
+            absF.Text:SetTextColor(.9,.2,.7,1)
         end
 
         absF.Text:SetText("("..math.floor(currentAbsorb)..")")
@@ -302,6 +362,8 @@ function options()
             absF.Text:SetTextColor(1,.1,.1,1)
         elseif (currentSpec == "DruidProt") then
             absF.Text:SetTextColor(1,.4,0,1)
+        elseif (currentSpec == "PaladinProt") then
+            absF.Text:SetTextColor(.9,.2,.7,1)
         end
 
         absF.Text:SetText("("..math.floor(currentAbsorb)..")")
@@ -317,6 +379,8 @@ function options()
             absF.Text:SetTextColor(1,.1,.1,1)
         elseif (currentSpec == "DruidProt" and currentAbsorb > 0) then
             absF.Text:SetTextColor(1,.4,0,1)
+        elseif (currentSpec == "PaladinProt" and currentAbsorb > 0) then
+            absF.Text:SetTextColor(.9,.2,.7,1)
         else
             absF.Text:SetTextColor(1,1,1,1)
         end
@@ -645,6 +709,8 @@ function options()
                     absF.Text:SetTextColor(1,.1,.1,1)
                 elseif (currentSpec == "DruidProt" and currentAbsorb > 0) then
                     absF.Text:SetTextColor(1,.4,0,1)
+                elseif (currentSpec == "PaladinProt" and currentAbsorb > 0) then
+                    absF.Text:SetTextColor(.9,.2,.7,1)
                 else
                     absF.Text:SetTextColor(1,1,1,1)
                 end
@@ -669,6 +735,8 @@ function options()
                     absF.Text:SetTextColor(1,.1,.1,1)
                 elseif (currentSpec == "DruidProt") then
                     absF.Text:SetTextColor(1,.4,0,1)
+                elseif (currentSpec == "PaladinProt") then
+                    absF.Text:SetTextColor(.9,.2,.7,1)
                 end
 
                 absF.Text:SetText("("..math.floor(currentAbsorb)..")")
@@ -691,6 +759,8 @@ function options()
                     absF.Text:SetTextColor(1,.1,.1,1)
                 elseif (currentSpec == "DruidProt") then
                     absF.Text:SetTextColor(1,.4,0,1)
+                elseif (currentSpec == "PaladinProt") then
+                    absF.Text:SetTextColor(.9,.2,.7,1)
                 end
 
                 absF.Text:SetText("("..math.floor(currentAbsorb)..")")
@@ -706,6 +776,8 @@ function options()
                     absF.Text:SetTextColor(1,.1,.1,1)
                 elseif (currentSpec == "DruidProt" and currentAbsorb > 0) then
                     absF.Text:SetTextColor(1,.4,0,1)
+                elseif (currentSpec == "PaladinProt" and currentAbsorb > 0) then
+                    absF.Text:SetTextColor(.9,.2,.7,1)
                 else
                     absF.Text:SetTextColor(1,1,1,1)
                 end
@@ -716,8 +788,6 @@ function options()
             displayMode = i
         end)
     end
-
-
 
 
     optionsF.Close = CreateFrame("Frame", nil, optionsF)
@@ -837,6 +907,29 @@ function options()
             print("Критический удар повесил "..math.floor(calc).. " абсорба")
         end
     end
+
+    local function addAbsorbProtoPaladin(t5_stacks)
+        local calc = ((GetParryChance() + GetBlockChance()) / 100 * GetShieldBlock()) * t5_stacks
+    
+        currentAbsorb = calc
+        if (currentAbsorb > 50000) then currentAbsorb = 50000 end
+
+        if (displayMode == 1) then
+            absF.Text:SetText(math.floor(currentAbsorb))
+            absF.Text:SetTextColor(.9,.2,.7,1)
+        elseif (displayMode == 2 or displayMode == 3) then
+            absF.Text:SetText("("..math.floor(currentAbsorb)..")")
+            absF.Text:SetTextColor(.9,.2,.7,1)
+            absF.Text2:SetText(UnitHealth("player"))
+        elseif (displayMode == 4) then
+            absF.Text:SetText(UnitHealth("player") + math.floor(currentAbsorb))
+            absF.Text:SetTextColor(.9,.2,.7,1)
+        end
+        
+        if (testMode) then
+            print("Священное пламя повесил "..math.floor(calc).." абсорба.")
+        end
+    end
     
     local function removeAbsorb(dmg, subevent, schoolDmg, trinket)
         if (absorbQueue[1] == "Затвердевшая кожа" or 
@@ -935,10 +1028,12 @@ function options()
 
         if (absorbQueue[1] == "Ледяной доспех" or
             absorbQueue[1] == "Кровавый щит" or
-            absorbQueue == "Дикая защита" or
+            absorbQueue[1] == "Дикая защита" or
+            absorbQueue[1] == "Барьер света" or
         absorbQueue[1] == "Железное сердце" and absorbQueue[2] == "Ледяной доспех" and trinket == trinketAbsorb2 or
         absorbQueue[1] == "Железное сердце" and absorbQueue[2] == "Кровавый щит" and trinket == trinketAbsorb2 or
-        absorbQueue[1] == "Железное сердце" and absorbQueue[2] == "Дикая защита" and trinket == trinketAbsorb2) then
+        absorbQueue[1] == "Железное сердце" and absorbQueue[2] == "Дикая защита" and trinket == trinketAbsorb2 or
+        absorbQueue[1] == "Железное сердце" and absorbQueue[2] == "Барьер света" and trinket == trinketAbsorb2) then
             currentAbsorb = currentAbsorb - dmg
             if (currentAbsorb <= 0) then
                 currentAbsorb = 0
@@ -1187,42 +1282,70 @@ function options()
             end
         end
 
-        if (currentSpec == "DruidProt" and T5 >= 2) then
+        if (currentSpec == "PaladinProt" and T5 == 4) then
             if (subevent == "SPELL_AURA_REMOVED" and name == playerName) then
-                if (arg10 == "Дикая защита") then -- arg10 = Spell Name
+                if (arg10 == "Барьер света") then -- arg10 = Spell Name
                     if (hideIfNoBuff) then absF:Hide() end
                     removeAbsorb(currentAbsorb+1, "", "", _)
-                    removeAbsorbQueue("Дикая защита")
+                    removeAbsorbQueue("Барьер света")
                     removeTimer()
                 end
             end
 
             if (subevent == "SPELL_AURA_APPLIED" and name == playerName) then
-                if (arg10 == "Дикая защита") then -- arg10 = Spell Name
+                if (arg10 == "Барьер света") then -- arg10 = Spell Name
                     setTimer(arg10)
-                    addAbsorbQueue("Дикая защита")
+                    addAbsorbQueue("Барьер света")
                 end
             end
 
-            local baffName = UnitBuff("player", "Облик лютого медведя")
-            if (baffName ~= nil) then
-
-                if (subevent == "SWING_DAMAGE" and name == playerName and arg15 == 1) then -- arg15 = crit
+            if (subevent == "SPELL_DAMAGE" and name == playerName) then
+                if (arg10 == "Щит праведности") then -- arg10 = Spell Name
                     if (hideIfNoBuff) then absF:Show() end
-                    addAbsordProtoDruid()
-                end
-
-                if (subevent == "SPELL_DAMAGE" and name == playerName and arg18 == 1) then -- arg18 = crit
-                    if (hideIfNoBuff) then absF:Show() end
-                    addAbsordProtoDruid()
-                end
-
-                if (subevent == "SPELL_PERIODIC_DAMAGE" and name == playerName and arg18 == 1) then
-                    if (hideIfNoBuff) then absF:Show() end
-                    addAbsordProtoDruid()
+                    local buffName, _, _, buffStacks = UnitBuff("player", "Бастион праведности")
+                    if (buffName ~= nil) then
+                        addAbsorbProtoPaladin(buffStacks)
+                    end
                 end
             end
         end
+
+        -- if (currentSpec == "DruidProt" and T5 >= 2) then
+        --     if (subevent == "SPELL_AURA_REMOVED" and name == playerName) then
+        --         if (arg10 == "Дикая защита") then -- arg10 = Spell Name
+        --             if (hideIfNoBuff) then absF:Hide() end
+        --             removeAbsorb(currentAbsorb+1, "", "", _)
+        --             removeAbsorbQueue("Дикая защита")
+        --             removeTimer()
+        --         end
+        --     end
+
+        --     if (subevent == "SPELL_AURA_APPLIED" and name == playerName) then
+        --         if (arg10 == "Дикая защита") then -- arg10 = Spell Name
+        --             setTimer(arg10)
+        --             addAbsorbQueue("Дикая защита")
+        --         end
+        --     end
+
+        --     local baffName = UnitBuff("player", "Облик лютого медведя")
+        --     if (baffName ~= nil) then
+
+        --         if (subevent == "SWING_DAMAGE" and name == playerName and arg15 == 1) then -- arg15 = crit
+        --             if (hideIfNoBuff) then absF:Show() end
+        --             addAbsordProtoDruid()
+        --         end
+
+        --         if (subevent == "SPELL_DAMAGE" and name == playerName and arg18 == 1) then -- arg18 = crit
+        --             if (hideIfNoBuff) then absF:Show() end
+        --             addAbsordProtoDruid()
+        --         end
+
+        --         if (subevent == "SPELL_PERIODIC_DAMAGE" and name == playerName and arg18 == 1) then
+        --             if (hideIfNoBuff) then absF:Show() end
+        --             addAbsordProtoDruid()
+        --         end
+        --     end
+        -- end
     end)
 
     specChangeF:SetScript("OnEvent", function ()
@@ -1238,6 +1361,8 @@ function options()
                 absF.Text:SetTextColor(1,.1,.1,1)
             elseif (currentSpec == "DruidProt" and currentAbsorb > 0) then
                 absF.Text:SetTextColor(1,.4,0,1)
+            elseif (currentSpec == "PaladinProt" and currentAbsorb > 0) then
+                absF.Text:SetTextColor(.9,.2,.7,1)
             else
                 absF.Text:SetTextColor(1,1,1,1)
             end
@@ -1248,6 +1373,8 @@ function options()
                 absF.Text:SetTextColor(1,.1,.1,1)
             elseif (currentSpec == "DruidProt") then
                 absF.Text:SetTextColor(1,.4,0,1)
+            elseif (currentSpec == "PaladinProt") then
+                absF.Text:SetTextColor(.9,.2,.7,1)
             end
         end
     end)
