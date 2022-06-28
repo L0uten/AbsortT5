@@ -1,6 +1,6 @@
 -- Тут нечего смотреть, очередной говно-код (серьезно код говно). Прошу покинуть данный файл -_-
 
-local VERSION = "0.1.3"
+local VERSION = "0.1.4"
 
 local frame = CreateFrame("Frame")
 local optionsF = CreateFrame("Frame", nil, UIParent)
@@ -891,14 +891,11 @@ function options()
     end
 
     local function addAbsordProtoDruid()
-        baseAP, posBuffAP= UnitAttackPower("player")
+        local baseAP, posBuffAP= UnitAttackPower("player")
         local calc = 0
-        if (T5 == 2 or T5 == 3) then
-            calc = ((baseAP + posBuffAP) / 100) * 25
-        elseif (T5 == 4 or T5 == 5) then
+        if (T5 == 4 or T5 == 5) then
             calc = ((baseAP + posBuffAP) / 100) * 100
         end
-
 
         currentAbsorb = currentAbsorb + calc
         if (currentAbsorb > 50000) then currentAbsorb = 50000 end
@@ -1215,9 +1212,19 @@ function options()
             removeAbsorb(arg10, subevent, _, _) -- arg10 - Absorbed damage
         end
         if (subevent == "SPELL_MISSED" and arg7 == playerName and arg12 == "ABSORB") then
+            if (arg11 == 0 and currentSpec == "DruidProt") then
+                removeAbsorb(arg13, subevent, arg11, _) -- arg13 Absorbed damage, arg11 School damage
+                return
+            end
+
             removeAbsorb(arg13, subevent, arg11, _) -- arg13 Absorbed damage, arg11 School damage
         end
         if (subevent == "SPELL_PERIODIC_MISSED" and arg7 == playerName and arg12 == "ABSORB") then
+            if (arg11 == 0 and currentSpec == "DruidProt") then
+                removeAbsorb(arg13, subevent, arg11, _) -- arg13 Absorbed damage, arg11 School damage
+                return
+            end
+
             removeAbsorb(arg13, subevent, arg11, _) -- arg13 Absorbed damage, arg11 School damage
         end
 
@@ -1322,42 +1329,42 @@ function options()
             end
         end
 
-        -- if (currentSpec == "DruidProt" and T5 >= 2) then
-        --     if (subevent == "SPELL_AURA_REMOVED" and name == playerName) then
-        --         if (arg10 == "Дикая защита") then -- arg10 = Spell Name
-        --             if (hideIfNoBuff) then absF:Hide() end
-        --             removeAbsorb(currentAbsorb+1, "", "", _)
-        --             removeAbsorbQueue("Дикая защита")
-        --             removeTimer()
-        --         end
-        --     end
+        if (currentSpec == "DruidProt" and T5 >= 2) then
+            if (subevent == "SPELL_AURA_REMOVED" and name == playerName) then
+                if (arg10 == "Дикая защита") then -- arg10 = Spell Name
+                    if (hideIfNoBuff) then absF:Hide() end
+                    removeAbsorb(currentAbsorb+1, "", "", _)
+                    removeAbsorbQueue("Дикая защита")
+                    removeTimer()
+                end
+            end
 
-        --     if (subevent == "SPELL_AURA_APPLIED" and name == playerName) then
-        --         if (arg10 == "Дикая защита") then -- arg10 = Spell Name
-        --             setTimer(arg10)
-        --             addAbsorbQueue("Дикая защита")
-        --         end
-        --     end
+            if (subevent == "SPELL_AURA_APPLIED" and name == playerName) then
+                if (arg10 == "Дикая защита") then -- arg10 = Spell Name
+                    setTimer(arg10)
+                    addAbsorbQueue("Дикая защита")
+                end
+            end
 
-        --     local baffName = UnitBuff("player", "Облик лютого медведя")
-        --     if (baffName ~= nil) then
+            local baffName = UnitBuff("player", "Облик лютого медведя")
+            if (baffName ~= nil) then
 
-        --         if (subevent == "SWING_DAMAGE" and name == playerName and arg15 == 1) then -- arg15 = crit
-        --             if (hideIfNoBuff) then absF:Show() end
-        --             addAbsordProtoDruid()
-        --         end
+                if (subevent == "SWING_DAMAGE" and name == playerName and arg15 == 1) then -- arg15 = crit
+                    if (hideIfNoBuff) then absF:Show() end
+                    addAbsordProtoDruid()
+                end
 
-        --         if (subevent == "SPELL_DAMAGE" and name == playerName and arg18 == 1) then -- arg18 = crit
-        --             if (hideIfNoBuff) then absF:Show() end
-        --             addAbsordProtoDruid()
-        --         end
+                if (subevent == "SPELL_DAMAGE" and name == playerName and arg18 == 1) then -- arg18 = crit
+                    if (hideIfNoBuff) then absF:Show() end
+                    addAbsordProtoDruid()
+                end
 
-        --         if (subevent == "SPELL_PERIODIC_DAMAGE" and name == playerName and arg18 == 1) then
-        --             if (hideIfNoBuff) then absF:Show() end
-        --             addAbsordProtoDruid()
-        --         end
-        --     end
-        -- end
+                if (subevent == "SPELL_PERIODIC_DAMAGE" and name == playerName and arg18 == 1) then
+                    if (hideIfNoBuff) then absF:Show() end
+                    addAbsordProtoDruid()
+                end
+            end
+        end
     end)
 
     specChangeF:SetScript("OnEvent", function ()

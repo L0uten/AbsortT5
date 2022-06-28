@@ -2,7 +2,7 @@
 ## Title: AbsorbT5
 ## Notes: Отображает абсорб от Т5
 ## Author: Хасподь
-## Version: 0.1.3
+## Version: 0.1.4
 ## SavedVariablesPerCharacter: showAbs, oldPos, oldPosTimer, oldPosRageRP, isFixPos, showOnlyInCombat, hideIfNoBuff, showTimer, showRageRP, testMode, displayMode
 
 AbsorbT5.lua
