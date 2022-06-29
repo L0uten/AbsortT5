@@ -1215,17 +1215,17 @@ function options()
             if (arg11 == 0 and currentSpec == "DruidProt") then
                 removeAbsorb(arg13, subevent, arg11, _) -- arg13 Absorbed damage, arg11 School damage
                 return
+            elseif (currentSpec ~= "DruidProt") then
+                removeAbsorb(arg13, subevent, arg11, _)
             end
-
-            removeAbsorb(arg13, subevent, arg11, _) -- arg13 Absorbed damage, arg11 School damage
         end
         if (subevent == "SPELL_PERIODIC_MISSED" and arg7 == playerName and arg12 == "ABSORB") then
             if (arg11 == 0 and currentSpec == "DruidProt") then
                 removeAbsorb(arg13, subevent, arg11, _) -- arg13 Absorbed damage, arg11 School damage
                 return
+            elseif (currentSpec ~= "DruidProt") then
+                removeAbsorb(arg13, subevent, arg11, _)
             end
-
-            removeAbsorb(arg13, subevent, arg11, _) -- arg13 Absorbed damage, arg11 School damage
         end
 
         if (currentSpec == "Frost" and T5 >= 2) then
@@ -1329,7 +1329,7 @@ function options()
             end
         end
 
-        if (currentSpec == "DruidProt" and T5 >= 2) then
+        if (currentSpec == "DruidProt" and T5 >= 4) then
             if (subevent == "SPELL_AURA_REMOVED" and name == playerName) then
                 if (arg10 == "Дикая защита") then -- arg10 = Spell Name
                     if (hideIfNoBuff) then absF:Hide() end
