@@ -1,6 +1,6 @@
 -- Тут нечего смотреть, очередной говно-код (серьезно код говно). Прошу покинуть данный файл -_-
 
-local VERSION = "0.1.4"
+local VERSION = "0.1.5"
 
 local frame = CreateFrame("Frame")
 local optionsF = CreateFrame("Frame", nil, UIParent)
@@ -275,7 +275,7 @@ function options()
 
 
 
-
+    absF.Settings = CreateFrame("Frame", nil, absF)
     absF:SetWidth("100")
     absF:SetHeight("30")
     if (oldPos == nil) then
@@ -289,8 +289,20 @@ function options()
     absF:SetBackdropColor(0, 0, 0, .8)
     absF:EnableMouse(not isFixPos)
     absF:SetMovable(true)
+    absF:SetScript("OnMouseUp", function(self, arg1)
+        if (arg1 == "RightButton") then
+            if (absF.Settings:IsShown()) then
+                absF.Settings:Hide()
+            else
+                absF.Settings:Show()
+            end
+        end
+    end)
     absF:RegisterForDrag("LeftButton")
-    absF:SetScript("OnDragStart", absF.StartMoving)
+    absF:SetScript("OnDragStart", function()
+        absF:StartMoving()
+        absF.Settings:Hide()
+    end)
     absF:SetScript("OnDragStop", function ()
         saveAbsPoint(absF)
         absF:StopMovingOrSizing()
@@ -411,6 +423,63 @@ function options()
     else
         absF.Timer:Hide()
     end
+
+    absF.Settings = CreateFrame("Frame", nil, absF)
+    absF.Settings:SetWidth(100)
+    absF.Settings:SetHeight(40)
+    absF.Settings:SetPoint("CENTER", absF, "CENTER", absF:GetWidth(), -(absF:GetHeight() / 2))
+    absF.Settings:SetBackdrop({
+        bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+    })
+    absF.Settings:SetBackdropColor(0, 0, 0, 1)
+    absF.Settings:Hide()
+    absF.Settings.absHideButton = CreateFrame("Frame", nil, absF.Settings)
+    absF.Settings.absHideButton:SetWidth(absF.Settings:GetWidth())
+    absF.Settings.absHideButton:SetHeight(20)
+    absF.Settings.absHideButton:SetPoint("TOP", absF.Settings, "TOP")
+    absF.Settings.absHideButton.Text = absF.Settings.absHideButton:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    absF.Settings.absHideButton.Text:SetPoint("CENTER")
+    absF.Settings.absHideButton.Text:SetText("Скрыть окно")
+    absF.Settings.absHideButton:SetBackdrop({
+        bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+    })
+    absF.Settings.absHideButton:SetBackdropColor(0, 0, 0, 0)
+    absF.Settings.absHideButton:SetScript("OnEnter", function ()
+        absF.Settings.absHideButton:SetBackdropColor(1, 1, 1, .2)
+    end)
+    absF.Settings.absHideButton:SetScript("OnLeave", function ()
+        absF.Settings.absHideButton:SetBackdropColor(0, 0, 0, 0)
+    end)
+    absF.Settings.absHideButton:SetScript("OnMouseUp", function ()
+        absF:Hide()
+        absF.Settings:Hide()
+        showAbs = false
+    end)
+
+    absF.Settings.absHideButton:EnableMouse(true)
+
+    absF.Settings.Cancel = CreateFrame("Frame", nil, absF.Settings)
+    absF.Settings.Cancel:SetWidth(absF.Settings:GetWidth())
+    absF.Settings.Cancel:SetHeight(20)
+    absF.Settings.Cancel:SetPoint("TOP", absF.Settings.absHideButton, "TOP", 0, -(absF.Settings.Cancel:GetHeight()))
+    absF.Settings.Cancel.Text = absF.Settings.Cancel:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    absF.Settings.Cancel.Text:SetPoint("CENTER")
+    absF.Settings.Cancel.Text:SetText("Отмена")
+    absF.Settings.Cancel:SetBackdrop({
+        bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+    })
+    absF.Settings.Cancel:SetBackdropColor(0, 0, 0, 0)
+    absF.Settings.Cancel:SetScript("OnEnter", function ()
+        absF.Settings.Cancel:SetBackdropColor(1, 1, 1, .2)
+    end)
+    absF.Settings.Cancel:SetScript("OnLeave", function ()
+        absF.Settings.Cancel:SetBackdropColor(0, 0, 0, 0)
+    end)
+    absF.Settings.Cancel:SetScript("OnMouseUp", function ()
+        absF.Settings:Hide()
+    end)
+
+    absF.Settings.Cancel:EnableMouse(true)
 
     optionsF.Title = optionsF:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
     optionsF.Title:SetPoint("TOP", 0, -10)
@@ -1401,10 +1470,20 @@ end
 
 SlashCmdList.ABST5 = function(msg, editBox)
 
-    if (optionsF:IsShown()) then
-        optionsF:Hide()
-    else
-        optionsF:Show()
+    if (#msg == 0) then
+        if (optionsF:IsShown()) then
+            optionsF:Hide()
+        else
+            optionsF:Show()
+        end
+    end
+
+    if (string.lower(msg) == "show") then
+        absF:Show()
+    end
+
+    if (string.lower(msg) == "hide") then
+        absF:Hide()
     end
 end
 
