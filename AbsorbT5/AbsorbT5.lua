@@ -276,8 +276,8 @@ function options()
 
 
     absF.Settings = CreateFrame("Frame", nil, absF)
-    absF:SetWidth("100")
-    absF:SetHeight("30")
+    absF:SetWidth(100)
+    absF:SetHeight(30)
     if (oldPos == nil) then
         absF:SetPoint("RIGHT", optionsF, "RIGHT", 130, 0)
     else
@@ -403,10 +403,10 @@ function options()
 
 
     absF.Timer = CreateFrame("Frame", nil, absF)
-    absF.Timer:SetWidth("30")
-    absF.Timer:SetHeight("20")
+    absF.Timer:SetWidth(30)
+    absF.Timer:SetHeight(20)
     if (oldPosTimer == nil) then
-        absF.Timer:SetPoint("RIGHT", absF, "RIGHT", 30, 0)
+        absF.Timer:SetPoint("RIGHT", absF, "RIGHT", absF.Timer:GetWidth(), 0)
     else
         absF.Timer:SetPoint(oldPosTimer.point, absF, oldPosTimer.relativePoint, oldPosTimer.xOfs, oldPosTimer.yOfs)
     end
@@ -858,6 +858,41 @@ function options()
         end)
     end
 
+    -- local standartWidthAbs = 100
+    -- local standartHeightAbs = 30
+    -- local standartWidthAbsTimer = 30
+    -- local standartHeightAbsTimer = 20
+    -- optionsF.AbsSize = CreateFrame("Slider", nil, optionsF, "OptionsSliderTemplate")
+    -- optionsF.AbsSize:SetWidth(150)
+    -- optionsF.AbsSize:SetHeight(20)
+    -- optionsF.AbsSize:SetPoint("BOTTOM", optionsF, "BOTTOM", 0, 30)
+    -- optionsF.AbsSize:SetOrientation('HORIZONTAL')
+    -- optionsF.AbsSize:SetMinMaxValues(-10, 100)
+    -- optionsF.AbsSize:SetValue(0)
+    -- optionsF.AbsSize:SetValueStep(1)
+    -- optionsF.AbsSize:SetScript("OnValueChanged", function(self, arg1)
+    --     if (arg1 == 0) then
+    --         absF:SetWidth(standartWidthAbs)
+    --         absF:SetHeight(standartHeightAbs)
+    --         absF.Timer:SetWidth(standartWidthAbsTimer)
+    --         absF.Timer:SetHeight(standartHeightAbsTimer)
+    --     else
+    --         absF:SetWidth(standartWidthAbs + (standartWidthAbs / 100 * arg1))
+    --         absF:SetHeight(standartHeightAbs + (standartHeightAbs / 100 * arg1))
+    --         absF.Timer:SetWidth(standartWidthAbsTimer + (standartWidthAbsTimer / 100 * arg1))
+    --         absF.Timer:SetHeight(standartHeightAbsTimer + (standartHeightAbsTimer / 100 * arg1))
+    --         absF.Timer:ClearAllPoints()
+    --         if (oldPosTimer.point == "LEFT") then
+    --             absF.Timer:SetPoint(oldPosTimer.point, absF, oldPosTimer.relativePoint, -(absF.Timer:GetWidth()), 0)
+    --         elseif (oldPosTimer.point == "TOP") then
+    --             absF.Timer:SetPoint(oldPosTimer.point, absF, oldPosTimer.relativePoint, 0, absF.Timer:GetHeight())
+    --         elseif (oldPosTimer.point == "RIGHT") then
+    --             absF.Timer:SetPoint(oldPosTimer.point, absF, oldPosTimer.relativePoint, absF.Timer:GetWidth(), 0)
+    --         elseif (oldPosTimer.point == "BOTTOM") then
+    --             absF.Timer:SetPoint(oldPosTimer.point, absF, oldPosTimer.relativePoint, 0, -(absF.Timer:GetHeight()))
+    --         end
+    --     end
+    -- end)
 
     optionsF.Close = CreateFrame("Frame", nil, optionsF)
     optionsF.Close:SetWidth(25)
@@ -1340,7 +1375,7 @@ function options()
             end
         end
 
-        if (currentSpec == "Blood" and T5 == 4) then
+        if (currentSpec == "Blood" and T5 >= 4) then
 
             if (subevent == "SPELL_AURA_REMOVED" and name == playerName) then
                 if (arg10 == "Кровавый щит") then -- arg10 = Spell Name
@@ -1370,7 +1405,7 @@ function options()
             end
         end
 
-        if (currentSpec == "PaladinProt" and T5 == 4) then
+        if (currentSpec == "PaladinProt" and T5 >= 4) then
             if (subevent == "SPELL_AURA_REMOVED" and name == playerName) then
                 if (arg10 == "Барьер света") then -- arg10 = Spell Name
                     if (hideIfNoBuff) then absF:Hide() end
@@ -1480,10 +1515,12 @@ SlashCmdList.ABST5 = function(msg, editBox)
 
     if (string.lower(msg) == "show") then
         absF:Show()
+        showAbs = true
     end
 
     if (string.lower(msg) == "hide") then
         absF:Hide()
+        showAbs = false
     end
 end
 
