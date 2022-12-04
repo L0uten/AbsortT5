@@ -21,6 +21,7 @@ local trinketAbsorb1 = 0
 local trinketAbsorb2 = { 0, 0 }
 local trinketAbsorb3 = 0
 local trinketAbsorb4 = 0
+local trinketAbsorb5 = 0
 
 local function specCheck()
     if (IsSpellKnown(55262)) then
@@ -1139,6 +1140,26 @@ function options()
             end
         end
 
+        if (absorbQueue[1] == "Кровавая преграда" or
+        absorbQueue[1] == "Железное сердце" and absorbQueue[2] == "Кровавая преграда" and trinket == trinketAbsorb2) then
+            if (trinketAbsorb5 > 0 and trinket ~= trinketAbsorb5) then
+                if (trinketAbsorb5 > 0) then
+                    if (trinketAbsorb5 - dmg < 0) then
+                        local remainder = dmg - trinketAbsorb5
+                        trinketAbsorb5 = 0
+                        removeAbsorb(remainder, subevent, schoolDmg, trinketAbsorb5)
+                        return
+                    elseif (trinketAbsorb5 - dmg > 0) then
+                        trinketAbsorb5 = trinketAbsorb5 - dmg
+                        return
+                    elseif (trinketAbsorb5 - dmg == 0) then
+                        trinketAbsorb5 = 0
+                        return
+                    end
+                end
+            end
+        end
+
         if (absorbQueue[1] == "Ледяной доспех" or
             absorbQueue[1] == "Кровавый щит" or
             absorbQueue[1] == "Дикая защита" or
@@ -1168,6 +1189,20 @@ function options()
             elseif (displayMode == 4) then
                 absF.Text:SetText(UnitHealth("player") + math.floor(currentAbsorb))
             end
+        end
+    end
+
+    local function clearAbsorb()
+        currentAbsorb = 0
+
+        if (displayMode == 1) then
+            absF.Text:SetText(0)
+            absF.Text:SetTextColor(1,1,1,1)
+        elseif (displayMode == 2 or displayMode == 3) then
+            absF.Text:SetText("(0)")
+        elseif (displayMode == 4) then
+            absF.Text:SetText(UnitHealth("player") + math.floor(currentAbsorb))
+            absF.Text:SetTextColor(1,1,1,1)
         end
     end
 
@@ -1256,6 +1291,13 @@ function options()
         end
 
         if (subevent == "SPELL_AURA_APPLIED" and name == playerName) then
+            if (arg10 == "Кровавая преграда") then
+                if (trinketAbsorb5 == 0) then
+                    trinketAbsorb5 = 18000
+                    addAbsorbQueue("Кровавая преграда")
+                end
+            end
+
             if (arg10 == "Затвердевшая кожа") then
                 if (trinketAbsorb1 == 0) then
                     trinketAbsorb1 = 24600
@@ -1290,6 +1332,11 @@ function options()
         end
 
         if (subevent == "SPELL_AURA_REMOVED" and name == playerName) then
+            if (arg10 == "Кровавая преграда") then
+                trinketAbsorb5 = 0
+                removeAbsorbQueue("Кровавая преграда")
+            end
+
             if (arg10 == "Затвердевшая кожа") then
                 trinketAbsorb1 = 0
                 removeAbsorbQueue("Затвердевшая кожа")
@@ -1337,7 +1384,7 @@ function options()
             if (subevent == "SPELL_AURA_REMOVED" and name == playerName) then
                 if (arg10 == "Ледяной доспех") then -- arg10 = Spell Name
                     if (hideIfNoBuff) then absF:Hide() end
-                    removeAbsorb(currentAbsorb+1, "", "", _)
+                    clearAbsorb()
                     removeAbsorbQueue("Ледяной доспех")
                     removeTimer()
                 end
@@ -1380,7 +1427,7 @@ function options()
             if (subevent == "SPELL_AURA_REMOVED" and name == playerName) then
                 if (arg10 == "Кровавый щит") then -- arg10 = Spell Name
                     if (hideIfNoBuff) then absF:Hide() end
-                    removeAbsorb(currentAbsorb+1, "", "", _)
+                    clearAbsorb()
                     removeAbsorbQueue("Кровавый щит")
                     removeTimer()
                 end
@@ -1409,7 +1456,7 @@ function options()
             if (subevent == "SPELL_AURA_REMOVED" and name == playerName) then
                 if (arg10 == "Барьер света") then -- arg10 = Spell Name
                     if (hideIfNoBuff) then absF:Hide() end
-                    removeAbsorb(currentAbsorb+1, "", "", _)
+                    clearAbsorb()
                     removeAbsorbQueue("Барьер света")
                     removeTimer()
                 end
@@ -1437,7 +1484,7 @@ function options()
             if (subevent == "SPELL_AURA_REMOVED" and name == playerName) then
                 if (arg10 == "Дикая защита") then -- arg10 = Spell Name
                     if (hideIfNoBuff) then absF:Hide() end
-                    removeAbsorb(currentAbsorb+1, "", "", _)
+                    clearAbsorb()
                     removeAbsorbQueue("Дикая защита")
                     removeTimer()
                 end
