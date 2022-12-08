@@ -1,6 +1,6 @@
 -- Тут нечего смотреть, очередной говно-код (серьезно код говно). Прошу покинуть данный файл -_-
 
-local VERSION = "0.1.5"
+local VERSION = "0.1.7"
 
 local frame = CreateFrame("Frame")
 local optionsF = CreateFrame("Frame", nil, UIParent)
@@ -228,6 +228,7 @@ frame:SetScript("OnEvent", function (self, event, addOnName)
         howManyT5(currentSpec)
     end
 end)
+
 
 combatFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
 combatFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -971,6 +972,7 @@ function options()
         if (testMode) then
             print("Ледяной удар нанес "..dmg.." урона и повесил "..math.floor(calc).." абсорба.")
         end
+
     end
 
     local function addAbsorbBdk()
@@ -1194,6 +1196,7 @@ function options()
 
     local function clearAbsorb()
         currentAbsorb = 0
+        
 
         if (displayMode == 1) then
             absF.Text:SetText(0)
@@ -1452,33 +1455,33 @@ function options()
             end
         end
 
-        if (currentSpec == "PaladinProt" and T5 >= 4) then
-            if (subevent == "SPELL_AURA_REMOVED" and name == playerName) then
-                if (arg10 == "Барьер света") then -- arg10 = Spell Name
-                    if (hideIfNoBuff) then absF:Hide() end
-                    clearAbsorb()
-                    removeAbsorbQueue("Барьер света")
-                    removeTimer()
-                end
-            end
+        -- if (currentSpec == "PaladinProt" and T5 >= 4) then
+        --     if (subevent == "SPELL_AURA_REMOVED" and name == playerName) then
+        --         if (arg10 == "Барьер света") then -- arg10 = Spell Name
+        --             if (hideIfNoBuff) then absF:Hide() end
+        --             clearAbsorb()
+        --             removeAbsorbQueue("Барьер света")
+        --             removeTimer()
+        --         end
+        --     end
 
-            if (subevent == "SPELL_AURA_APPLIED" and name == playerName) then
-                if (arg10 == "Барьер света") then -- arg10 = Spell Name
-                    setTimer(arg10)
-                    addAbsorbQueue("Барьер света")
-                end
-            end
+        --     if (subevent == "SPELL_AURA_APPLIED" and name == playerName) then
+        --         if (arg10 == "Барьер света") then -- arg10 = Spell Name
+        --             setTimer(arg10)
+        --             addAbsorbQueue("Барьер света")
+        --         end
+        --     end
 
-            if (subevent == "SPELL_DAMAGE" and name == playerName) then
-                if (arg10 == "Щит праведности") then -- arg10 = Spell Name
-                    if (hideIfNoBuff) then absF:Show() end
-                    local buffName, _, _, buffStacks = UnitBuff("player", "Бастион праведности")
-                    if (buffName ~= nil) then
-                        addAbsorbProtoPaladin(buffStacks)
-                    end
-                end
-            end
-        end
+        --     if (subevent == "SPELL_DAMAGE" and name == playerName) then
+        --         if (arg10 == "Щит праведности") then -- arg10 = Spell Name
+        --             if (hideIfNoBuff) then absF:Show() end
+        --             local buffName, _, _, buffStacks = UnitBuff("player", "Бастион праведности")
+        --             if (buffName ~= nil) then
+        --                 addAbsorbProtoPaladin(buffStacks)
+        --             end
+        --         end
+        --     end
+        -- end
 
         if (currentSpec == "DruidProt" and T5 >= 4) then
             if (subevent == "SPELL_AURA_REMOVED" and name == playerName) then
