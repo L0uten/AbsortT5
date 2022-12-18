@@ -1,6 +1,6 @@
 -- Тут нечего смотреть, очередной говно-код (серьезно код говно). Прошу покинуть данный файл -_-
 
-local VERSION = "0.1.7"
+local VERSION = "0.1.9"
 
 local frame = CreateFrame("Frame")
 local optionsF = CreateFrame("Frame", nil, UIParent)
@@ -22,6 +22,7 @@ local trinketAbsorb2 = { 0, 0 }
 local trinketAbsorb3 = 0
 local trinketAbsorb4 = 0
 local trinketAbsorb5 = 0
+local trinketAbsorb6 = 0
 
 local function specCheck()
     if (IsSpellKnown(55262)) then
@@ -1162,6 +1163,26 @@ function options()
             end
         end
 
+        if (absorbQueue[1] == "Арктический барьер" or
+        absorbQueue[1] == "Железное сердце" and absorbQueue[2] == "Арктический барьер" and trinket == trinketAbsorb2) then
+            if (trinketAbsorb5 > 0 and trinket ~= trinketAbsorb5) then
+                if (trinketAbsorb5 > 0) then
+                    if (trinketAbsorb5 - dmg < 0) then
+                        local remainder = dmg - trinketAbsorb5
+                        trinketAbsorb5 = 0
+                        removeAbsorb(remainder, subevent, schoolDmg, trinketAbsorb5)
+                        return
+                    elseif (trinketAbsorb5 - dmg > 0) then
+                        trinketAbsorb5 = trinketAbsorb5 - dmg
+                        return
+                    elseif (trinketAbsorb5 - dmg == 0) then
+                        trinketAbsorb5 = 0
+                        return
+                    end
+                end
+            end
+        end
+
         if (absorbQueue[1] == "Ледяной доспех" or
             absorbQueue[1] == "Кровавый щит" or
             absorbQueue[1] == "Дикая защита" or
@@ -1294,6 +1315,11 @@ function options()
         end
 
         if (subevent == "SPELL_AURA_APPLIED" and name == playerName) then
+            if (arg10 == "Арктический барьер") then
+                trinketAbsorb6 = math.floor(UnitArmor("player"))
+                addAbsorbQueue("Арктический барьер")
+            end
+
             if (arg10 == "Кровавая преграда") then
                 if (trinketAbsorb5 == 0) then
                     trinketAbsorb5 = 18000
@@ -1335,6 +1361,11 @@ function options()
         end
 
         if (subevent == "SPELL_AURA_REMOVED" and name == playerName) then
+            if (arg10 == "Арктический барьер") then
+                trinketAbsorb6 = 0
+                removeAbsorbQueue("Арктический барьер")
+            end
+
             if (arg10 == "Кровавая преграда") then
                 trinketAbsorb5 = 0
                 removeAbsorbQueue("Кровавая преграда")
