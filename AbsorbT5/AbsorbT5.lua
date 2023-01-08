@@ -1,6 +1,6 @@
 -- Тут нечего смотреть, очередной говно-код (серьезно код говно). Прошу покинуть данный файл -_-
 
-local VERSION = "0.1.9"
+local VERSION = "0.2.0"
 
 local frame = CreateFrame("Frame")
 local optionsF = CreateFrame("Frame", nil, UIParent)
@@ -1165,18 +1165,18 @@ function options()
 
         if (absorbQueue[1] == "Арктический барьер" or
         absorbQueue[1] == "Железное сердце" and absorbQueue[2] == "Арктический барьер" and trinket == trinketAbsorb2) then
-            if (trinketAbsorb5 > 0 and trinket ~= trinketAbsorb5) then
-                if (trinketAbsorb5 > 0) then
-                    if (trinketAbsorb5 - dmg < 0) then
-                        local remainder = dmg - trinketAbsorb5
-                        trinketAbsorb5 = 0
-                        removeAbsorb(remainder, subevent, schoolDmg, trinketAbsorb5)
+            if (trinketAbsorb6 > 0 and trinket ~= trinketAbsorb6) then
+                if (trinketAbsorb6 > 0) then
+                    if (trinketAbsorb6 - dmg < 0) then
+                        local remainder = dmg - trinketAbsorb6
+                        trinketAbsorb6 = 0
+                        removeAbsorb(remainder, subevent, schoolDmg, trinketAbsorb6)
                         return
-                    elseif (trinketAbsorb5 - dmg > 0) then
-                        trinketAbsorb5 = trinketAbsorb5 - dmg
+                    elseif (trinketAbsorb6 - dmg > 0) then
+                        trinketAbsorb6 = trinketAbsorb6 - dmg
                         return
-                    elseif (trinketAbsorb5 - dmg == 0) then
-                        trinketAbsorb5 = 0
+                    elseif (trinketAbsorb6 - dmg == 0) then
+                        trinketAbsorb6 = 0
                         return
                     end
                 end
